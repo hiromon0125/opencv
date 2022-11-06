@@ -1,6 +1,5 @@
 <script>
 	import { spring } from 'svelte/motion';
-	import ___ASSET___0 from './assets/1x1-00000000.png';
 	let coords = spring(
 		{ x: 50, y: 50 },
 		{
@@ -40,7 +39,6 @@
 	on:mousemove={(e) => coords.set({ x: e.clientX, y: e.clientY })}
 	on:mousedown={() => size.set(50)}
 	on:mouseup={() => size.set(30)}
-	style="cursor: url({___ASSET___0});"
 >
 	<circle cx={$coords.x} cy={$coords.y} r={$size} />
 </svg>
@@ -52,7 +50,7 @@
 		left: 0;
 		width: 70vw;
 		height: 100vh;
-		background-color: transparent;
+		background-color: white;
 		box-shadow: rgba(0, 0, 255, 0.5) 0px 0px 10px;
 	}
 	circle {
