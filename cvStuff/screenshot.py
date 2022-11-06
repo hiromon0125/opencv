@@ -34,6 +34,10 @@ def findWindowId():
     window_index = input("choose window:")
     windowId = windowList[int(window_index)][1]
     try:
+        imageFileName = 'test-screenshot.png'
+        os.system('screencapture -x -l %s %s' % (windowId, imageFileName))
+        img = Image.open(imageFileName)
+        img = numpy.array(img)
         return windowId
     except TypeError:
         print('Could not find window')
