@@ -28,8 +28,8 @@ def onTrack6(val):
     valHigh=val
     print('Val High',valHigh)
 
-width=1000
-height=600
+width=500
+height=300
 cam=cv2.VideoCapture(0,cv2.CAP_DSHOW)
 cam.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT,height)
@@ -48,18 +48,18 @@ val low 140
 val high 255
 """
 hueLow=118
-hueHigh=121
-satLow=206
+hueHigh=200
+satLow=142
 satHigh=255
 valLow=140
 valHigh=255
 
-cv2.createTrackbar('Hue Low','myTracker',118,179,onTrack1)
-cv2.createTrackbar('Hue High','myTracker',121,179,onTrack2)
-cv2.createTrackbar('Sat Low','myTracker',142,255,onTrack3)
-cv2.createTrackbar('Sat High','myTracker',245,255,onTrack4)
-cv2.createTrackbar('Val Low','myTracker',140,255,onTrack5)
-cv2.createTrackbar('Val High','myTracker',255,255,onTrack6)
+cv2.createTrackbar('Hue Low','myTracker',hueLow,179,onTrack1)
+cv2.createTrackbar('Hue High','myTracker',hueHigh,179,onTrack2)
+cv2.createTrackbar('Sat Low','myTracker',satLow,255,onTrack3)
+cv2.createTrackbar('Sat High','myTracker',satHigh,255,onTrack4)
+cv2.createTrackbar('Val Low','myTracker',valLow,255,onTrack5)
+cv2.createTrackbar('Val High','myTracker',valHigh,255,onTrack6)
 
 windowId = None
 last_circles = [None for _ in range(3)]
@@ -77,11 +77,12 @@ else:
 while True:
     if image_system == "webcam":
         ignore,  frame = cam.read()
+        frameHSV=cv2.cvtColor(frame,cv2.COLOR_RGB2HSV)
     else:
         while windowId is None:
             windowId = screenshot.findWindowId()
         frame=screenshot.takeScreenshot(windowId)
-    frameHSV=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+        frameHSV=cv2.cvtColor(frame,cv2.COLOR_RGB2HSV)
     lowerBound=np.array([hueLow,satLow,valLow])
     upperBound=np.array([hueHigh,satHigh,valHigh])
     myMask=cv2.inRange(frameHSV,lowerBound,upperBound)
@@ -102,14 +103,14 @@ while True:
                 start_line = last_circles[-1]
                 end_line = last_circles[0]
                 cv2.line(myObject, start_line,end_line, (0, 0, 255), 2)
-    # myObjectSmall=cv2.resize(myObject,(int(width/2),int(height/2)))
+    myObjectSmall=cv2.resize(myObject,(int(width/2),int(height/2)))
     cv2.imshow('My Object',myObject)
-    # cv2.moveWindow('My Object',int(width/2),int(height))
-    # myMaskSmall=cv2.resize(myMask,(int(width/2),int(height/2)))
+    cv2.moveWindow('My Object',int(width/2),int(height))
+    myMaskSmall=cv2.resize(myMask,(int(width/2),int(height/2)))
     cv2.imshow('My Mask',myMask)
-    # cv2.moveWindow('My Mask',0,height)
+    cv2.moveWindow('My Mask',0,height)
     cv2.imshow('My Webcam', frame)
-    # cv2.moveWindow('My Webcam',0,0)
+    cv2.moveWindow('My Webcam',0,0)
     if cv2.waitKey(1) & 0xff ==ord('q'):
         break
 cam.release()
