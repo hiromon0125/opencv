@@ -62,6 +62,7 @@ cv2.createTrackbar('Val Low','myTracker',valLow,255,onTrack5)
 cv2.createTrackbar('Val High','myTracker',valHigh,255,onTrack6)
 
 windowId = None
+windowTitle = None
 last_circles = [None for _ in range(3)]
 
 ignore,  frame = cam.read()
@@ -71,18 +72,19 @@ if frame is not None:
         image_system = "webcam"
     else:
         image_system = "screenshot"
+        windowTitle = screenshot.findWindowTitle()
 else:
     image_system = "screenshot"
+    windowId = screenshot.findWindowId()
 
 while True:
-    if image_system == "webcam":
+    if windowTitle is None and windowTitle is None:
         ignore,  frame = cam.read()
-        frameHSV=cv2.cvtColor(frame,cv2.COLOR_RGB2HSV)
-    else:
-        while windowId is None:
-            windowId = screenshot.findWindowId()
+    elif windowTitle is None:
         frame=screenshot.takeScreenshot(windowId)
-        frameHSV=cv2.cvtColor(frame,cv2.COLOR_RGB2HSV)
+    else:
+        frame=screenshot.takeScreenshotWindows(windowTitle)
+    frameHSV=cv2.cvtColor(frame,cv2.COLOR_RGB2HSV)
     lowerBound=np.array([hueLow,satLow,valLow])
     upperBound=np.array([hueHigh,satHigh,valHigh])
     myMask=cv2.inRange(frameHSV,lowerBound,upperBound)
